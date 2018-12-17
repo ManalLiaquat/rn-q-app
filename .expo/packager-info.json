@@ -1,0 +1,9 @@
+{
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://ap-h2e.manalliaquat.q-app.exp.direct",
+  "packagerNgrokUrl": "https://packager.ap-h2e.manalliaquat.q-app.exp.direct",
+  "ngrokPid": 8444,
+  "packagerPort": null,
+  "packagerPid": null
+}
