@@ -1,26 +1,31 @@
-import LoginScreen from './Screens/Login';
-import HomeScreen from './Screens/Home';
-import AuthLoadingScreen from './Screens/AuthLoader';
+import * as React from "react";
+import { Container, Content } from "native-base";
+import { Font, AppLoading } from "expo";
+import Navigator from "./Config/Navigator";
 
-import {
-  createStackNavigator,
-  createAppContainer,
-  createSwitchNavigator,
-} from 'react-navigation';
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
 
-const AppStack = createStackNavigator({ Home: HomeScreen });
-const AuthStack = createStackNavigator({ Login: LoginScreen });
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    });
+    this.setState({ loading: false });
+  }
 
-export default createAppContainer(
-  createSwitchNavigator(
-    {
-      AuthLoader: AuthLoadingScreen,
-      App: AppStack,
-      Auth: AuthStack,
-    },
-    {
-      initialRouteName:"AuthLoader"
+  render() {
+    if (this.state.loading) {
+      return <AppLoading />;
     }
-  )
-);
-//sssss
+    return (
+      <Container>
+        <Navigator />
+      </Container>
+    );
+  }
+}

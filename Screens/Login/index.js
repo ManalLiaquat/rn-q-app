@@ -1,16 +1,13 @@
 import * as React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  AsyncStorage,
-  Alert
-} from "react-native";
+import { StyleSheet, AsyncStorage, Alert } from "react-native";
+import { Container, Header, Content, Button, Text } from "native-base";
 import { Facebook } from "expo";
 import firebase from "../../Config/Firebase";
 
 export default class Login extends React.Component {
+  static navigationOptions = {
+    header: null
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -22,11 +19,11 @@ export default class Login extends React.Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.logIn();
+      // this.logIn();
     }, 1500);
   }
 
-  async logIn() {
+  async logIn(logInAs) {
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       "1302749559866771",
       {
@@ -39,19 +36,23 @@ export default class Login extends React.Component {
       );
       let res = await response.json();
       // Alert.alert(`Logged in! Hi ${res.name}!`);
-      // console.log(res);
       // console.log('Token', token);
       await AsyncStorage.setItem("userToken", token);
-      this.props.navigation.navigate("Home");
+      console.log(res);
+      res.logInAs = logInAs;
+      console.log(res);
       firebase
         .database()
-        .ref(`/users/`)
-        .set(res);
+        .ref(`/users/${res.id}/`)
+        .set(res)
+        .then(() => {
+          this.props.navigation.navigate("Home");
+        });
       firebase
         .database()
         .ref("/fcmTokens")
         .child(token)
-        .set(res.uid);
+        .set(res.id);
     } else {
       console.log("type === cancel");
       // type === 'cancel'
@@ -59,6 +60,27 @@ export default class Login extends React.Component {
   }
 
   render() {
-    return <Button onPress={this.logIn} title="Login With Facebook" />;
+    return (
+      <Content>
+        <Button
+          full
+          info
+          onPress={() => {
+            this.logIn("company");
+          }}
+        >
+          <Text>Are you a company?</Text>
+        </Button>
+        <Button
+          full
+          danger
+          onPress={() => {
+            this.logIn("user");
+          }}
+        >
+          <Text>Are you finding/waiting for tokens?</Text>
+        </Button>
+      </Content>
+    );
   }
 }
