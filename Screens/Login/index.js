@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, AsyncStorage, Alert } from "react-native";
+import { StyleSheet, AsyncStorage, Alert, View } from "react-native";
 import { Container, Header, Content, Button, Text } from "native-base";
 import { Facebook } from "expo";
 import firebase from "../../Config/Firebase";
@@ -36,23 +36,19 @@ export default class Login extends React.Component {
       );
       let res = await response.json();
       // Alert.alert(`Logged in! Hi ${res.name}!`);
-      // console.log('Token', token);
-      await AsyncStorage.setItem("userToken", token);
-      console.log(res);
       res.logInAs = logInAs;
-      console.log(res);
+      res.token = token;
+      await AsyncStorage.setItem("user", JSON.stringify(res));
       firebase
         .database()
         .ref(`/users/${res.id}/`)
-        .set(res)
-        .then(() => {
-          this.props.navigation.navigate("Home");
-        });
+        .set(res);
       firebase
         .database()
         .ref("/fcmTokens")
         .child(token)
         .set(res.id);
+      this.props.navigation.navigate("Home", { logInAs });
     } else {
       console.log("type === cancel");
       // type === 'cancel'
@@ -61,12 +57,13 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <Content>
+      <View style={{ flex: 1, justifyContent: "center" }}>
         <Button
           full
           info
           onPress={() => {
             this.logIn("company");
+            // this.props.navigation.navigate("Home", { logInAs: "company" });
           }}
         >
           <Text>Are you a company?</Text>
@@ -76,11 +73,12 @@ export default class Login extends React.Component {
           danger
           onPress={() => {
             this.logIn("user");
+            // this.props.navigation.navigate("Home", { logInAs: "user" });
           }}
         >
           <Text>Are you finding/waiting for tokens?</Text>
         </Button>
-      </Content>
+      </View>
     );
   }
 }
