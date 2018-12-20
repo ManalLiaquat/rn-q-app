@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
-import { Constants, Facebook } from "expo";
 import { Button, Icon, Text } from "native-base";
+import firebase from "../../Config/Firebase";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -19,9 +19,16 @@ export default class Home extends React.Component {
         light
         iconRight
         transparent
-        onPress={async () => {
-          await AsyncStorage.removeItem("user");
-          this.props.navigation.navigate("Auth");
+        onPress={() => {
+          firebase
+            .auth()
+            .signOut()
+            .then(async () => {
+              console.log("LOGOUT SUCCESS");
+              this.props.navigation.navigate("Auth");
+              await AsyncStorage.removeItem("user");
+            })
+            .catch(() => console.log("LOGOUT ERROR"));
         }}
       >
         <Icon name="md-log-out" />
@@ -41,7 +48,7 @@ export default class Home extends React.Component {
         <Text>{user && user.logInAs}</Text>
         {/* <Button
           onPress={async () => {
-            await AsyncStorage.removeItem("user");
+            await AsyncStorage.removeItem("user");//
             this.props.navigation.navigate("Auth");
           }}
         >

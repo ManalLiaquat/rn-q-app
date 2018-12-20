@@ -1,6 +1,6 @@
 import * as React from "react";
-import { StyleSheet, AsyncStorage, Alert, View } from "react-native";
-import { Container, Header, Content, Button, Text } from "native-base";
+import { Alert, View } from "react-native";
+import { Button, Text } from "native-base";
 import { Facebook } from "expo";
 import firebase from "../../Config/Firebase";
 
@@ -10,17 +10,14 @@ export default class Login extends React.Component {
   };
   constructor(props) {
     super(props);
-    this.state = {
-      type: "cancel",
-      token: null
-    };
+    this.state = {};
     this.logIn = this.logIn.bind(this);
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      // this.logIn();
-    }, 1500);
+    // setTimeout(() => {
+    //   // this.logIn();
+    // }, 1500);//sd
   }
 
   async logIn(logInAs) {
@@ -31,27 +28,37 @@ export default class Login extends React.Component {
       }
     );
     if (type === "success") {
-      const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
-      );
-      let res = await response.json();
-      // Alert.alert(`Logged in! Hi ${res.name}!`);
-      res.logInAs = logInAs;
-      res.token = token;
-      await AsyncStorage.setItem("user", JSON.stringify(res));
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
       firebase
-        .database()
-        .ref(`/users/${res.id}/`)
-        .set(res);
-      firebase
-        .database()
-        .ref("/fcmTokens")
-        .child(token)
-        .set(res.id);
+        .auth()
+        .signInAndRetrieveDataWithCredential(credential)
+        .catch(error => {
+          console.log(error);
+        });
       this.props.navigation.navigate("Home", { logInAs });
+
+      // const response = await fetch(
+      //   `https://graph.facebook.com/me?access_token=${token}`
+      // );
+      // let res = await response.json();
+      // // Alert.alert(`Logged in! Hi ${res.name}!`);
+      // res.logInAs = logInAs;
+      // res.token = token;
+      // firebase
+      //   .database()
+      //   .ref(`/users/${res.id}/`)
+      //   .set(res);
+      // firebase
+      //   .database()
+      //   .ref("/fcmTokens")
+      //   .child(token)
+      //   .set(res.id);
     } else {
       console.log("type === cancel");
       // type === 'cancel'
+      //
+      // MMLfb21081997
     }
   }
 

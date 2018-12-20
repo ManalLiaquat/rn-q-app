@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://9t-zzr.manalliaquat.q-app.exp.direct",
-  "packagerNgrokUrl": "https://packager.9t-zzr.manalliaquat.q-app.exp.direct",
-  "ngrokPid": 18416,
+  "expoServerNgrokUrl": "https://pc-pug.manalliaquat.q-app.exp.direct",
+  "packagerNgrokUrl": "https://packager.pc-pug.manalliaquat.q-app.exp.direct",
+  "ngrokPid": 5764,
   "packagerPort": 19001,
-  "packagerPid": 20812
+  "packagerPid": 6808
 }
