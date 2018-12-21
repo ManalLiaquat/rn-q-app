@@ -1,7 +1,9 @@
 import * as React from "react";
-import { Container, Content } from "native-base";
 import { Font, AppLoading } from "expo";
 import Navigator from "./Config/Navigator";
+import { Provider } from "react-redux";
+import { store, persistor } from "./Config/Redux/store";
+import { PersistGate } from 'redux-persist/integration/react'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -23,9 +25,11 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
     return (
-      <Container>
-        <Navigator />
-      </Container>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Navigator />
+        </PersistGate>
+      </Provider>
     );
   }
 }

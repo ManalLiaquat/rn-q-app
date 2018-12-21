@@ -14,51 +14,36 @@ export default class Login extends React.Component {
     this.logIn = this.logIn.bind(this);
   }
 
-  componentDidMount() {
-    // setTimeout(() => {
-    //   // this.logIn();
-    // }, 1500);//sd
-  }
-
   async logIn(logInAs) {
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       "1302749559866771",
       {
-        permissions: ["public_profile"]
+        permissions: ["public_profile", "email"]
       }
     );
+
     if (type === "success") {
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
 
       firebase
         .auth()
         .signInAndRetrieveDataWithCredential(credential)
+        .then(userCredential => {
+          // console.log(userCredential.user, "*****userCredential*****");
+          firebase
+            .database()
+            .ref(`/users/${userCredential.user.uid}/`)
+            .set(userCredential.user)
+            .then(() => {
+              this.props.navigation.navigate("Home", { logInAs });
+            });
+        })
         .catch(error => {
           console.log(error);
         });
-      this.props.navigation.navigate("Home", { logInAs });
-
-      // const response = await fetch(
-      //   `https://graph.facebook.com/me?access_token=${token}`
-      // );
-      // let res = await response.json();
-      // // Alert.alert(`Logged in! Hi ${res.name}!`);
-      // res.logInAs = logInAs;
-      // res.token = token;
-      // firebase
-      //   .database()
-      //   .ref(`/users/${res.id}/`)
-      //   .set(res);
-      // firebase
-      //   .database()
-      //   .ref("/fcmTokens")
-      //   .child(token)
-      //   .set(res.id);
     } else {
       console.log("type === cancel");
       // type === 'cancel'
-      //
-      // MMLfb21081997
     }
   }
 

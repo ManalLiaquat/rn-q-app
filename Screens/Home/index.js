@@ -13,27 +13,10 @@ export default class Home extends React.Component {
   }
 
   static navigationOptions = {
-    title: "Home",
-    headerRight: (
-      <Button
-        light
-        iconRight
-        transparent
-        onPress={() => {
-          firebase
-            .auth()
-            .signOut()
-            .then(async () => {
-              console.log("LOGOUT SUCCESS");
-              this.props.navigation.navigate("Auth");
-              await AsyncStorage.removeItem("user");
-            })
-            .catch(() => console.log("LOGOUT ERROR"));
-        }}
-      >
-        <Icon name="md-log-out" />
-      </Button>
-    )
+    title: "Home"
+    // headerRight: (
+
+    // )
   };
 
   load_user = async () => {
@@ -46,14 +29,6 @@ export default class Home extends React.Component {
       <View>
         <Text>You're looged in successfully</Text>
         <Text>{user && user.logInAs}</Text>
-        {/* <Button
-          onPress={async () => {
-            await AsyncStorage.removeItem("user");//
-            this.props.navigation.navigate("Auth");
-          }}
-        >
-          <Text>Logout</Text>
-        </Button> */}
       </View>
     );
   }

@@ -1,11 +1,13 @@
 import LoginScreen from "../../Screens/Login";
 import HomeScreen from "../../Screens/Home";
 import AuthLoadingScreen from "../../Screens/AuthLoader";
+import LogoutButton from "../../Components/Logout";
 
 import {
   createStackNavigator,
   createAppContainer,
-  createSwitchNavigator
+  createSwitchNavigator,
+  createDrawerNavigator
 } from "react-navigation";
 
 const AppStack = createStackNavigator(
@@ -22,13 +24,18 @@ const AppStack = createStackNavigator(
     }
   }
 );
+
+const DrawerStack = createDrawerNavigator({
+  Home: AppStack,
+  Logout: LogoutButton
+});
 const AuthStack = createStackNavigator({ Login: LoginScreen });
 
 export default createAppContainer(
   createSwitchNavigator(
     {
       AuthLoader: AuthLoadingScreen,
-      App: AppStack,
+      App: DrawerStack,
       Auth: AuthStack
     },
     {
