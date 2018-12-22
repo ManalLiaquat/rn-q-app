@@ -54,8 +54,8 @@ export default class Login extends React.Component {
           full
           info
           onPress={() => {
-            this.logIn("company");
-            // this.props.navigation.navigate("Home", { logInAs: "company" });
+            // this.logIn("company");
+            this.props.navigation.navigate("Home", { logInAs: "company" });
           }}
         >
           <Text>Are you a company?</Text>
@@ -64,8 +64,8 @@ export default class Login extends React.Component {
           full
           danger
           onPress={() => {
-            this.logIn("user");
-            // this.props.navigation.navigate("Home", { logInAs: "user" });
+            // this.logIn("user");
+            this.props.navigation.navigate("Home", { logInAs: "user" });
           }}
         >
           <Text>Are you finding/waiting for tokens?</Text>
