@@ -1,6 +1,5 @@
 import React from "react";
 import { ActivityIndicator, AsyncStorage, StatusBar, View } from "react-native";
-import firebase from "../../Config/Firebase";
 import { connect } from "react-redux";
 import { updateUser } from "../../Config/Redux/Actions/authActions";
 

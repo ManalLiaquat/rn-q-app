@@ -1,7 +1,5 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
-import { Button, Icon, Text, View } from "native-base";
-import firebase from "../../Config/Firebase";
 import Company from "../Company";
 
 export default class Home extends React.Component {

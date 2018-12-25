@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Button, Text } from "native-base";
 import { Facebook } from "expo";
 import firebase from "../../Config/Firebase";
