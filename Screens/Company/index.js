@@ -1,5 +1,10 @@
 import React from "react";
-import { Modal, TouchableHighlight, TouchableOpacity } from "react-native";
+import {
+  Modal,
+  TouchableHighlight,
+  TouchableOpacity,
+  TextInput
+} from "react-native";
 import {
   Container,
   Button,
@@ -9,8 +14,7 @@ import {
   Fab,
   Form,
   Item,
-  Label,
-  Input
+  Label
 } from "native-base";
 import firebase from "../../Config/Firebase";
 import { connect } from "react-redux";
@@ -21,20 +25,27 @@ class Company extends React.Component {
     super(props);
     this.state = {
       user: null,
-      active: true,
-      isProfileModal: false
+      profile: {
+        name: "",
+        since: "",
+        certificates: [],
+        timings: [],
+        address: ""
+      },
+      // flags
+      isFabActive: true,
+      isProfileModal: true
     };
   }
 
   static getDerivedStateFromProps(props) {
     console.log("IsUser_REDUX ==>", props.user ? "YES" : "NO");
-    console.log(props.user);
-
+    // console.log(props.user);
     return { user: props.user };
   }
 
   showProfileModal = () => {
-    const { isProfileModal } = this.state;
+    const { isProfileModal, profile } = this.state;
     return (
       <View style={{ marginTop: 22 }}>
         <Modal
@@ -60,17 +71,41 @@ class Company extends React.Component {
                 <Text>Close</Text>
                 <Icon name="ios-close-circle-outline" />
               </Button>
-            </View>
-            <Form>
-              <Item floatingLabel>
+              <View>
+                <Text> </Text>
                 <Label>Name of Company</Label>
-                <Input />
-              </Item>
-              <Item floatingLabel last>
-                <Label>Password</Label>
-                <Input />
-              </Item>
-            </Form>
+                <TextInput
+                  style={{
+                    height: 40,
+                    borderColor: "gray",
+                    borderWidth: 1,
+                    marginTop: 10,
+                    padding: 10
+                  }}
+                  onChangeText={text => {
+                    profile.name = text;
+                    this.setState({ profile });
+                  }}
+                  value={profile.name}
+                />
+                <Label>Since</Label>
+                <TextInput
+                  keyboardType="numeric"
+                  style={{
+                    height: 40,
+                    borderColor: "gray",
+                    borderWidth: 1,
+                    marginTop: 10,
+                    padding: 10
+                  }}
+                  onChangeText={text => {
+                    profile.since = text;
+                    this.setState({ profile });
+                  }}
+                  value={profile.since}
+                />
+              </View>
+            </View>
           </View>
         </Modal>
       </View>
@@ -82,17 +117,17 @@ class Company extends React.Component {
   }
 
   render() {
-    // const {} = this.state;
+    const { isFabActive } = this.state;
     return (
       <Container>
         <View style={{ flex: 1 }}>
           <Fab
-            active={this.state.active}
+            active={isFabActive}
             direction="up"
             containerStyle={{}}
             style={{ backgroundColor: "#5067FF" }}
             position="bottomRight"
-            onPress={() => this.setState({ active: !this.state.active })}
+            onPress={() => this.setState({ isFabActive: !isFabActive })}
           >
             <Icon name="md-add" />
             <Button style={{ backgroundColor: "#34A34F" }} onPress={() => {}}>
