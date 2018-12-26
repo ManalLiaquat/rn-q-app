@@ -1,21 +1,7 @@
 import React from "react";
-import {
-  Modal,
-  TouchableHighlight,
-  TouchableOpacity,
-  TextInput
-} from "react-native";
-import {
-  Container,
-  Button,
-  Text,
-  View,
-  Icon,
-  Fab,
-  Form,
-  Item,
-  Label
-} from "native-base";
+import { Modal, TextInput, StyleSheet, Alert } from "react-native";
+import { Container, Button, Text, View, Icon, Fab, Label } from "native-base";
+import { ImagePicker } from "expo";
 import firebase from "../../Config/Firebase";
 import { connect } from "react-redux";
 import { updateUser } from "../../Config/Redux/Actions/authActions";
@@ -45,7 +31,7 @@ class Company extends React.Component {
   }
 
   showProfileModal = () => {
-    const { isProfileModal, profile } = this.state;
+    let { isProfileModal, profile } = this.state;
     return (
       <View style={{ marginTop: 22 }}>
         <Modal
@@ -73,15 +59,10 @@ class Company extends React.Component {
               </Button>
               <View>
                 <Text> </Text>
-                <Label>Name of Company</Label>
+                <Label>Name of Company / Business</Label>
                 <TextInput
-                  style={{
-                    height: 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    marginTop: 10,
-                    padding: 10
-                  }}
+                  placeholder="e.g. SuperMart"
+                  style={styles.textBar}
                   onChangeText={text => {
                     profile.name = text;
                     this.setState({ profile });
@@ -90,26 +71,94 @@ class Company extends React.Component {
                 />
                 <Label>Since</Label>
                 <TextInput
+                  placeholder="e.g. 1980"
                   keyboardType="numeric"
-                  style={{
-                    height: 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    marginTop: 10,
-                    padding: 10
-                  }}
+                  style={styles.textBar}
                   onChangeText={text => {
-                    profile.since = text;
-                    this.setState({ profile });
+                    if (text.length < 5) {
+                      profile.since = text;
+                      this.setState({ profile });
+                    }
                   }}
                   value={profile.since}
                 />
+                <Text>Upload 3 images of certificates of company</Text>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignSelf: "center"
+                  }}
+                >
+                  <Button
+                    border
+                    small
+                    success
+                    onPress={() => {
+                      this.uploadImage(1);
+                    }}
+                  >
+                    <Text>Image 1</Text>
+                  </Button>
+                  <Button
+                    border
+                    small
+                    success
+                    onPress={() => {
+                      this.uploadImage(2);
+                    }}
+                  >
+                    <Text>Image 2</Text>
+                  </Button>
+                  <Button
+                    border
+                    small
+                    success
+                    onPress={() => {
+                      this.uploadImage(3);
+                    }}
+                  >
+                    <Text>Image 3</Text>
+                  </Button>
+                </View>
               </View>
             </View>
           </View>
         </Modal>
       </View>
     );
+  };
+
+  uploadImage = async index => {
+    let result = await ImagePicker.launchCameraAsync();
+    if (!result.cancelled) {
+      this.handleUpload(
+        result.uri,
+        index,
+        `image_${Math.floor(Math.random() * 999)}`
+      )
+        .then(() => Alert.alert("Success"))
+        .catch(err => Alert.alert(JSON.stringify(err)));
+    }
+  };
+
+  handleUpload = async (uri, index, imageName) => {
+    let { profile } = this.state;
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    // console.log(uri);
+
+    let ref = firebase
+      .storage()
+      .ref()
+      .child(`images/${imageName}`);
+
+    ref.getDownloadURL().then(url => {
+      profile.certificates[index] = url;
+      this.setState({ profile });
+    });
+
+    return ref.put(blob);
   };
 
   componentDidMount() {
@@ -165,3 +214,13 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Company);
+
+const styles = StyleSheet.create({
+  textBar: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginTop: 10,
+    padding: 10
+  }
+});
