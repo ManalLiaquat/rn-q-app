@@ -3,7 +3,7 @@ import { Font, AppLoading } from "expo";
 import Navigator from "./Config/Navigator";
 import { Provider } from "react-redux";
 import { store, persistor } from "./Config/Redux/store";
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from "redux-persist/integration/react";
 
 export default class App extends React.Component {
   constructor(props) {

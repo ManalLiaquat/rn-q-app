@@ -31,7 +31,7 @@ const DrawerStack = createDrawerNavigator({
 });
 const AuthStack = createStackNavigator({ Login: LoginScreen });
 
-export default createAppContainer(
+const Navigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoader: AuthLoadingScreen,
@@ -43,3 +43,5 @@ export default createAppContainer(
     }
   )
 );
+
+export default Navigator;
